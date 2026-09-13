@@ -446,3 +446,475 @@ The human developer has final authority over:
 - Acceptance or rejection of AI proposals.
 
 AI agents should challenge decisions when necessary, but must not silently override them.
+
+---
+
+## 16. AI Artifact and File Structure
+
+AI-generated planning, analysis, review, testing, architecture, performance,
+security, and frontend artifacts must follow the repository structure.
+
+Agents must not arbitrarily create new documentation directories.
+
+The repository artifact structure is:
+
+docs/
+├── requirements/
+│   ├── features/
+│   └── business/
+│
+├── architecture/
+│   ├── proposals/
+│   └── decisions/
+│
+├── testing/
+├── performance/
+├── security/
+│
+└── frontend/
+    ├── design/
+    └── implementation/
+
+tasks/
+├── backlog/
+├── active/
+└── completed/
+
+---
+
+### 16.1 Artifact Ownership
+
+Each agent owns a specific category of artifact.
+
+#### Product Owner
+
+Creates:
+
+docs/requirements/features/
+
+Purpose:
+
+- Product Requirements
+- Business goals
+- Scope
+- Acceptance criteria
+- Priorities
+
+---
+
+#### Business Analyst
+
+Creates:
+
+docs/requirements/business/
+
+Purpose:
+
+- Business Analysis
+- Business flows
+- State transitions
+- Business rules
+- Business invariants
+- Acceptance scenarios
+- Edge cases
+
+---
+
+#### Project Manager
+
+Creates and manages:
+
+tasks/
+
+Purpose:
+
+- Delivery plans
+- Milestones
+- Implementation tasks
+- Dependencies
+- Priorities
+- Task status
+- Definition of Done
+
+PM must not place implementation tasks inside arbitrary documentation directories.
+
+---
+
+#### Solution Architect
+
+Creates:
+
+docs/architecture/proposals/
+
+Purpose:
+
+- Architecture proposals
+- Responsibility boundaries
+- Data ownership
+- Consistency models
+- Concurrency analysis
+- Failure semantics
+- Scalability considerations
+- Architectural alternatives
+
+---
+
+#### Tech Lead
+
+May create technical documentation under:
+
+docs/architecture/
+
+when the analysis represents a persistent technical decision or important
+technical reasoning.
+
+Technical discussion that does not require persistent documentation should
+remain in the agent conversation.
+
+If the decision is architecturally significant, create an ADR under:
+
+docs/architecture/decisions/
+
+---
+
+#### Test Engineer
+
+Creates:
+
+docs/testing/
+
+Purpose:
+
+- Test strategy
+- Test scenarios
+- Integration test plans
+- Regression strategy
+- Concurrency test plans
+- Verification criteria
+
+---
+
+#### Business QA
+
+Creates:
+
+docs/testing/
+
+Purpose:
+
+- Business QA reports
+- Acceptance verification
+- Business scenario results
+- Business invariant verification
+
+---
+
+#### Performance Engineer
+
+Creates:
+
+docs/performance/
+
+Purpose:
+
+- Benchmark plans
+- Load test plans
+- Stress test plans
+- Spike test plans
+- Soak test plans
+- Capacity test reports
+- Performance measurements
+- Bottleneck analysis
+
+Performance claims must include evidence whenever practical.
+
+---
+
+#### Security Reviewer
+
+Creates:
+
+docs/security/
+
+Purpose:
+
+- Security reviews
+- Threat analysis
+- Abuse cases
+- Security findings
+- Security verification requirements
+
+---
+
+#### UI Designer
+
+Creates:
+
+docs/frontend/design/
+
+Purpose:
+
+- UI/UX specifications
+- User flows
+- Screen states
+- Interaction rules
+- Responsive behavior
+- Accessibility requirements
+- Design decisions
+
+---
+
+#### FE Engineer
+
+Creates:
+
+docs/frontend/implementation/
+
+Purpose:
+
+- Frontend implementation plans
+- Component structure
+- State management
+- API integration requirements
+- Frontend testing strategy
+- Frontend technical considerations
+
+---
+
+### 16.2 Task Structure
+
+Implementation tasks must be stored under:
+
+tasks/backlog/
+
+before implementation begins.
+
+When the human developer starts implementation:
+
+tasks/active/
+
+When implementation and required verification are complete:
+
+tasks/completed/
+
+Task state must follow:
+
+BACKLOG
+READY
+IN_PROGRESS
+BLOCKED
+IN_REVIEW
+VERIFYING
+DONE
+
+The task must not be moved to DONE merely because an AI agent has produced
+a proposal or review.
+
+---
+
+### 16.3 Task Traceability
+
+Every task must contain:
+
+- Task ID
+- Title
+- Phase
+- Feature
+- Goal
+- Source requirement
+- Relevant SPEC section when applicable
+- Dependencies
+- Priority
+- Status
+- Required agents
+- Human implementation responsibility
+- Verification requirements
+- Definition of Done
+
+Example:
+
+Task ID:
+
+RESERVATION-001
+
+Feature:
+
+Reservation
+
+Phase:
+
+Phase 1
+
+Source Requirement:
+
+docs/requirements/features/RESERVATION-001-product-requirement.md
+
+Status:
+
+BACKLOG
+
+Owner:
+
+Human Developer
+
+Required Agents:
+
+- Tech Lead
+- Backend Reviewer
+- Test Engineer
+- Business QA
+- Performance Engineer
+
+---
+
+### 16.4 Artifact Naming
+
+Use the following naming convention:
+
+<FEATURE-ID>-<artifact-name>.md
+
+Examples:
+
+RESERVATION-001-product-requirement.md
+
+RESERVATION-001-business-analysis.md
+
+RESERVATION-001-architecture-proposal.md
+
+RESERVATION-001-test-strategy.md
+
+RESERVATION-001-performance-plan.md
+
+RESERVATION-001-security-review.md
+
+Avoid generic filenames such as:
+
+plan.md
+
+analysis.md
+
+design.md
+
+feature.md
+
+unless the document is explicitly project-wide.
+
+---
+
+### 16.5 Artifact Status
+
+Documentation must distinguish between:
+
+- PROPOSED
+- ACCEPTED
+- IMPLEMENTED
+- VERIFIED
+
+These states must not be treated as equivalent.
+
+For example:
+
+PROPOSED architecture
+≠
+ACCEPTED architecture
+
+ACCEPTED architecture
+≠
+IMPLEMENTED architecture
+
+IMPLEMENTED feature
+≠
+VERIFIED feature
+
+Documentation must reflect the actual repository state.
+
+---
+
+### 16.6 Existing Artifacts
+
+Before creating a new artifact:
+
+1. Check whether an existing artifact covers the same subject.
+2. Update the existing artifact when appropriate.
+3. Create a new artifact only when it represents a distinct artifact or decision.
+
+Do not create duplicate planning documents merely because multiple agents
+participated in the same workflow.
+
+---
+
+### 16.7 No Artifact Pollution
+
+Not every agent response requires a file.
+
+Do not create documentation merely to increase the number of artifacts.
+
+Create persistent documentation when it provides one of the following:
+
+- traceability
+- an approved requirement
+- an architectural proposal
+- an architectural decision
+- implementation planning
+- test strategy
+- verification evidence
+- performance evidence
+- security findings
+- frontend design specification
+- important operational knowledge
+
+Temporary reasoning and ordinary agent discussion should remain in the
+conversation.
+
+---
+
+### 16.8 Architecture Decisions
+
+Architectural decisions that materially affect the system should be recorded
+as ADRs under:
+
+docs/architecture/decisions/
+
+An ADR should normally contain:
+
+- Decision
+- Context
+- Problem
+- Options considered
+- Decision rationale
+- Consequences
+- Status
+
+Do not create ADRs for trivial implementation details.
+
+---
+
+### 16.9 Orchestrator Enforcement
+
+The Orchestrator is responsible for enforcing this artifact structure.
+
+Before delegating work, the Orchestrator should determine:
+
+1. Which agents are relevant.
+2. Which artifacts are required.
+3. Where each artifact belongs.
+4. Whether an existing artifact should be updated.
+5. Which artifacts require human approval.
+6. Which tasks should be created or updated.
+
+The Orchestrator must not allow agents to arbitrarily create new top-level
+documentation structures.
+
+The Orchestrator should preserve traceability between:
+
+Requirement
+→ Product Requirement
+→ Business Analysis
+→ Delivery Plan
+→ Architecture Proposal
+→ Technical Decision
+→ Task
+→ Implementation
+→ Review
+→ Verification
+→ Documentation

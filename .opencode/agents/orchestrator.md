@@ -581,9 +581,11 @@ Do not allow a downstream agent to silently override an upstream business decisi
 
 ## Artifact Flow
 
-Maintain traceability between engineering artifacts.
+The Orchestrator must follow the artifact structure defined in AGENTS.md.
 
-Typical flow:
+Do not invent new artifact locations.
+
+The standard feature artifact flow is:
 
 SPEC
 ↓
@@ -605,25 +607,296 @@ Verification
 ↓
 Documentation
 
-Use repository artifacts when appropriate.
+Artifact locations:
 
-Example structure:
+Product Requirement:
 
-tasks/
-├── active/
-├── backlog/
-└── completed/
+docs/requirements/features/
 
-docs/
-├── requirements/
-├── architecture/
-├── testing/
-├── performance/
-└── security/
+Business Analysis:
 
-The exact repository structure must follow the existing project conventions.
+docs/requirements/business/
 
-Do not create duplicate documentation when an existing artifact should be updated.
+Delivery Tasks:
+
+tasks/backlog/
+tasks/active/
+tasks/completed/
+
+Architecture Proposal:
+
+docs/architecture/proposals/
+
+Architectural Decisions:
+
+docs/architecture/decisions/
+
+Testing:
+
+docs/testing/
+
+Performance:
+
+docs/performance/
+
+Security:
+
+docs/security/
+
+Frontend Design:
+
+docs/frontend/design/
+
+Frontend Implementation Planning:
+
+docs/frontend/implementation/
+
+Before creating an artifact:
+
+1. Read AGENTS.md.
+2. Check whether the artifact already exists.
+3. Update an existing artifact when appropriate.
+4. Create a new artifact only when necessary.
+5. Follow the repository naming convention.
+6. Preserve traceability to the feature and requirement.
+
+Do not create generic directories such as:
+
+docs/planning/
+docs/analysis/
+docs/design/
+docs/misc/
+
+unless explicitly approved by the human developer.
+
+The Orchestrator is responsible for ensuring downstream agents place artifacts
+in the correct locations.
+
+Do not create separate planning documents merely because multiple agents
+participated in the same workflow.
+
+When multiple agents contribute to the same artifact, prefer updating the
+existing artifact rather than creating another artifact.
+
+## Feature Planning Artifact Rules
+
+When planning a new feature, the Orchestrator must create or update artifacts
+in the following order.
+
+### Step 1 — Product Requirement
+
+Delegate to Product Owner.
+
+Output:
+
+docs/requirements/features/<FEATURE-ID>-product-requirement.md
+
+The document must describe:
+
+- Goal
+- Business value
+- Scope
+- Out of scope
+- Business rules
+- Acceptance criteria
+- Priority
+- Dependencies
+- Open questions
+
+Status must initially be:
+
+PROPOSED
+
+---
+
+### Step 2 — Business Analysis
+
+Delegate to Business Analyst after the product requirement is sufficiently
+defined.
+
+Output:
+
+docs/requirements/business/<FEATURE-ID>-business-analysis.md
+
+The document must describe:
+
+- Business flow
+- Actors
+- Preconditions
+- Main flow
+- Alternative flows
+- Failure flows
+- State transitions
+- Business rules
+- Invariants
+- Edge cases
+- Acceptance scenarios
+- Open questions
+
+Do not invent behavior when requirements are ambiguous.
+
+---
+
+### Step 3 — Delivery Plan
+
+Delegate to Project Manager after Product Owner and Business Analyst outputs
+are sufficiently complete.
+
+The PM must create implementation tasks under:
+
+tasks/backlog/
+
+Tasks must reference:
+
+- Feature ID
+- Product Requirement
+- Business Analysis
+- SPEC section when applicable
+- Dependencies
+- Required agents
+- Human implementation responsibility
+- Verification requirements
+- Definition of Done
+
+Implementation ownership is:
+
+Human Developer
+
+---
+
+### Step 4 — Architecture Proposal
+
+Delegate to Solution Architect when the feature has meaningful architectural
+impact.
+
+Output:
+
+docs/architecture/proposals/<FEATURE-ID>-architecture-proposal.md
+
+The proposal is advisory.
+
+It must explicitly distinguish:
+
+PROPOSED
+
+from:
+
+ACCEPTED
+
+The human developer must approve or reject the architectural direction.
+
+---
+
+### Step 5 — Technical Discussion
+
+Delegate to Tech Lead after the architecture proposal exists, unless the
+human explicitly requests earlier technical exploration.
+
+The Tech Lead should challenge:
+
+- architecture
+- implementation approach
+- concurrency
+- transactions
+- idempotency
+- failure handling
+- performance
+- maintainability
+- operational complexity
+
+The Tech Lead must not implement production code.
+
+The final technical decision belongs to the human developer.
+
+If an important architectural decision is accepted, create or update:
+
+docs/architecture/decisions/
+
+only when an ADR is justified.
+
+---
+
+### Step 6 — Human Implementation
+
+After the technical decision is made:
+
+1. Move relevant task(s) from:
+
+tasks/backlog/
+
+to:
+
+tasks/active/
+
+2. The human developer implements the backend feature.
+
+3. AI agents must not implement production code unless explicitly requested.
+
+---
+
+### Step 7 — Review and Verification
+
+After implementation, invoke only relevant specialists.
+
+Possible agents:
+
+- Backend Reviewer
+- Test Engineer
+- Business QA
+- Security Reviewer
+- Performance Engineer
+- FE Engineer
+
+Each specialist must produce artifacts only when persistent evidence or
+documentation is useful.
+
+Use:
+
+docs/testing/
+
+for test strategy and verification.
+
+Use:
+
+docs/performance/
+
+for performance evidence.
+
+Use:
+
+docs/security/
+
+for security findings.
+
+Use:
+
+docs/frontend/
+
+for frontend artifacts.
+
+---
+
+### Step 8 — Completion
+
+A task may move to:
+
+DONE
+
+only when:
+
+- Human implementation is complete.
+- Required review is complete.
+- Required verification is complete.
+- Relevant acceptance criteria are satisfied.
+- Required documentation is updated.
+- No unresolved blocker prevents completion.
+
+Then move the task to:
+
+tasks/completed/
+
+The Orchestrator must not declare implementation complete merely because an
+AI agent reports that the implementation appears correct.
 
 ## Task Creation Rules
 
