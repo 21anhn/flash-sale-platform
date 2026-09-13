@@ -1,0 +1,92 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "apivn/kimi-k2.6",
+  "small_model": "apivn/kimi-k2.6",
+  "provider": {
+    "apivn": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "APIVN",
+      "options": {
+        "baseURL": "https://api.apivn.tech/v1",
+        "apiKey": "YOUR_API_KEY"
+      },
+      "models": {
+        "kimi-k2.6": {
+          "name": "Kimi K2.6",
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          }
+        }
+      }
+    }
+  },
+  "subagent_depth": 1,
+
+  "agents": {
+    "tech-lead": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k3"
+    },
+
+    "sa": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k3"
+    },
+
+    "backend-reviewer": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k3"
+    },
+
+    "security-reviewer": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k3"
+    },
+
+    "performance-engineer": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k3"
+    },
+
+    "po": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.6"
+    },
+
+    "ba": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.6"
+    },
+
+    "pm": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.6"
+    },
+
+    "business-qa": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.6"
+    },
+
+    "test-engineer": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.6"
+    },
+
+    "fe-engineer": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.7-code"
+    },
+
+    "ui-designer": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.6"
+    },
+
+    "documentation": {
+      "mode": "subagent",
+      "model": "apivn/kimi-k2.6"
+    }
+  }
+}
