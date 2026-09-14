@@ -41,22 +41,40 @@ An AI proposal, review, test plan, or architecture document does not constitute 
 
 The human developer remains responsible for production implementation.
 
-## Authoritative Sources
+## Context Loading Strategy
 
-Before planning non-trivial work, read:
+The Orchestrator uses the `.context/` navigation layer to avoid reading the entire repository for every task.
 
-- AGENTS.md
-- SPEC.md
-- README.md
+### Entry Point
 
-When relevant, also read:
+Start with `.context/README.md` to understand the context-routing system.
 
-- existing task files
-- existing architecture documentation
-- existing ADRs
-- relevant requirements
-- relevant source code
-- relevant test documentation
+### Loading Order
+
+1. Read `.context/current-state.md` to understand the actual repository state.
+2. Identify the work type (feature planning, architecture, implementation preparation, review, testing, security, performance, etc.).
+3. Load the relevant context profile from `.context/profiles/`.
+4. Load only relevant artifacts:
+   - requirements from `docs/requirements/`
+   - tasks from `tasks/`
+   - architecture from `docs/architecture/`
+   - tests from `docs/testing/`
+   - performance from `docs/performance/`
+   - security from `docs/security/`
+5. Inspect source code only when repository-state verification requires it.
+6. Never read the entire repository by default.
+
+### Authoritative Sources
+
+When the work type requires it, read:
+
+- `.context/README.md` — context system entry point
+- `.context/current-state.md` — actual repository state
+- `AGENTS.md` — AI engineering contract
+- `SPEC.md` — authoritative project specification
+- `README.md` — human orientation
+
+Read these selectively based on the context profile guidance, not unconditionally.
 
 The repository state is authoritative for what actually exists.
 
@@ -653,12 +671,13 @@ docs/frontend/implementation/
 
 Before creating an artifact:
 
-1. Read AGENTS.md.
-2. Check whether the artifact already exists.
-3. Update an existing artifact when appropriate.
-4. Create a new artifact only when necessary.
-5. Follow the repository naming convention.
-6. Preserve traceability to the feature and requirement.
+1. Read `.context/artifacts.md` for artifact rules and locations.
+2. Read `AGENTS.md` for the full artifact contract.
+3. Check whether the artifact already exists.
+4. Update an existing artifact when appropriate.
+5. Create a new artifact only when necessary.
+6. Follow the repository naming convention.
+7. Preserve traceability to the feature and requirement.
 
 Do not create generic directories such as:
 

@@ -189,15 +189,113 @@ Current repository:
 flash-sale-platform/
 ├── SPEC.md
 ├── AGENTS.md
-└── README.md
+├── README.md
+├── .context/          # AI context routing system
+├── .opencode/         # AI agent configuration
+├── docs/              # Planning and decision artifacts
+└── tasks/             # Implementation tasks
 ```
 
 The current focus is establishing the project foundation before implementing business functionality.
+
+## Working With AI Agents
+
+This project uses a structured AI-assisted engineering workflow. The human developer is the primary implementer and final decision maker. AI agents act as analysts, architects, advisors, and reviewers.
+
+### Quick Start for AI Collaboration
+
+If you are starting work with AI agents, follow this flow:
+
+```text
+README (this file)
+    ↓
+AGENTS.md — AI engineering contract
+    ↓
+.context/README.md — context routing entry point
+    ↓
+.context/current-state.md — what actually exists now
+    ↓
+Relevant task in tasks/backlog/ or tasks/active/
+    ↓
+Relevant context profile in .context/profiles/
+    ↓
+@orchestrator — coordinate specialist agents
+    ↓
+Specialist agents (PO, BA, SA, Tech Lead, etc.)
+    ↓
+Human decision
+    ↓
+Human implementation
+    ↓
+AI review (Backend Reviewer, Business QA, Security, Performance)
+    ↓
+Verification
+    ↓
+Documentation / ADR if needed
+```
+
+### Context System
+
+The `.context/` directory is the navigation layer for AI agents. It tells an agent what to load before starting a specific type of work.
+
+| File | Purpose |
+|------|---------|
+| `.context/README.md` | Context system entry point and loading policy |
+| `.context/current-state.md` | Actual repository state (authoritative) |
+| `.context/project.md` | Concise project identity and stack |
+| `.context/workflow.md` | Standard AI engineering workflow |
+| `.context/artifacts.md` | Artifact locations and creation rules |
+| `.context/agents.md` | Agent roles and responsibilities |
+| `.context/phases.md` | Development phases and current status |
+
+### Context Profiles
+
+Load the relevant profile for your current work type:
+
+| Profile | When to Use |
+|---------|-------------|
+| `.context/profiles/feature-planning.md` | New feature, requirement clarification, scope change |
+| `.context/profiles/architecture.md` | Architecture planning, ADR creation |
+| `.context/profiles/backend-implementation.md` | Implementation preparation, technical discussion |
+| `.context/profiles/backend-review.md` | Code review |
+| `.context/profiles/testing.md` | Test strategy, QA, verification |
+| `.context/profiles/security.md` | Security review, threat modeling |
+| `.context/profiles/performance.md` | Performance work, benchmarking |
+
+### Artifact Locations
+
+| Artifact Type | Location |
+|---------------|----------|
+| Product requirements | `docs/requirements/features/` |
+| Business analysis | `docs/requirements/business/` |
+| Architecture proposals | `docs/architecture/proposals/` |
+| Architecture decisions (ADRs) | `docs/architecture/decisions/` |
+| Test strategy / QA | `docs/testing/` |
+| Performance plans / reports | `docs/performance/` |
+| Security reviews | `docs/security/` |
+| Frontend design | `docs/frontend/design/` |
+| Frontend implementation | `docs/frontend/implementation/` |
+| Tasks (backlog) | `tasks/backlog/` |
+| Tasks (active) | `tasks/active/` |
+| Tasks (completed) | `tasks/completed/` |
+
+### Key Rules
+
+- AI agents **must not** autonomously implement production code unless explicitly requested.
+- The human developer makes all final architecture and implementation decisions.
+- Every agent-created artifact must identify the agent, role, task, artifact type, status, and production code impact.
+- Agents may modify `.context/`, `docs/`, and `tasks/` but not production source code unless authorized.
+- Agents may create branches and PRs, but **must never merge their own PRs**.
+
+For the full AI engineering contract, see [`AGENTS.md`](AGENTS.md).
+
+---
 
 ## Documentation
 
 * [`SPEC.md`](SPEC.md) — authoritative project specification
 * [`AGENTS.md`](AGENTS.md) — AI engineering instructions and human/AI development workflow
+* [`docs/ONBOARDING.md`](docs/ONBOARDING.md) — new member onboarding guide
 
 ## License
 
