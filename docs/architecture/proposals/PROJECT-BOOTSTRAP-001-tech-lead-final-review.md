@@ -37,7 +37,8 @@ Earlier accepted decisions that remain in force:
 | # | Decision Area | Final Decision | State |
 |---|---------------|----------------|-------|
 | 9 | Backend build tool | Gradle Kotlin DSL | **ACCEPTED** |
-| 10 | Frontend stack | Vite + React + TypeScript | **ACCEPTED** |
+| 10 | Spring Boot version | **4.1.1** (latest stable 4.x at implementation time) | **ACCEPTED** |
+| 11 | Frontend stack | Vite + React + TypeScript | **ACCEPTED** |
 | 11 | Frontend package manager | npm | **ACCEPTED** |
 | 12 | Database migrations | Flyway | **ACCEPTED** |
 | 13 | Module boundaries | Package-by-service | **ACCEPTED** |

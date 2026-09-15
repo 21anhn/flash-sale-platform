@@ -29,13 +29,28 @@
 
 The human developer is responsible for implementing the foundation production code, including but not limited to:
 
-- Backend project skeleton under `services/monolith/` with Gradle Kotlin DSL.
-- Backend dependencies (Spring Boot Web, Data JPA, Validation, Actuator, PostgreSQL driver, Flyway, Testcontainers, ArchUnit).
+- Backend project skeleton under `services/monolith/` with Gradle Kotlin DSL and **Spring Boot 4.1.1**.
+- Backend dependency versions:
+  - Java `21` LTS.
+  - Gradle `8.10.2` (via committed Gradle Wrapper).
+  - Spring Boot `4.1.1`.
+  - PostgreSQL Docker image `16.4`.
+  - Testcontainers `1.20.3`.
+  - ArchUnit `1.3.0`.
+  - Spring Boot Web, Data JPA, Validation, Actuator, PostgreSQL JDBC driver, Flyway, JUnit/Mockito/AssertJ managed by Spring Boot 4.1.1 BOM.
 - Backend configuration files (`application.yml`, `application-local.yml`, `application-test.yml`) using environment variables for secrets.
 - Backend package structure (`com.flashsale.config`, `com.flashsale.user`, `com.flashsale.event`, `com.flashsale.ticket`, `com.flashsale.order`, `com.flashsale.payment`). **Note:** `notification` is deferred until needed.
 - Backend main application class.
 - Flyway migration directory layout (`src/main/resources/db/migration/`). Use **timestamp-based** migration names (`V202409141200__...`).
 - Frontend project skeleton under `frontend/web/` with Vite, React, and TypeScript.
+- Frontend dependency versions:
+  - Node.js `22.11.0` LTS (locked via `.nvmrc` and `package.json` `engines`).
+  - npm `10.9.0`.
+  - Vite `5.4.10`.
+  - React `18.3.1`.
+  - TypeScript `5.6.3`.
+  - Vitest `2.1.3`.
+  - React Testing Library `16.0.1`.
 - Frontend dev-server proxy configuration for `/api` and `/actuator`.
 - Frontend landing page that calls the backend health endpoint.
 - Backend and frontend test harnesses with at least one passing test each.
