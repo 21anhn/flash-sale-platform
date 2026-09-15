@@ -111,6 +111,7 @@ Each package will eventually contain its own `controller`, `service`, `repositor
 | Decision | Accepted Choice | Status |
 |---|---|---|
 | Backend build tool | Gradle with Kotlin DSL | **ACCEPTED** |
+| Spring Boot version | **4.1.1** (latest stable 4.x at implementation time) | **ACCEPTED** |
 | Frontend build tool | Vite + React + TypeScript | **ACCEPTED** |
 | Frontend package manager | npm | **ACCEPTED** |
 | Database migrations | Flyway | **ACCEPTED** |
@@ -129,7 +130,39 @@ Each package will eventually contain its own `controller`, `service`, `repositor
 | Lombok | Defer; prefer Java records for DTOs and explicit constructors for entities | **ACCEPTED** |
 | Environment configuration | `.env.example` + documented `.env` workflow; no secrets committed | **ACCEPTED** |
 
-### 3.5 Local Development Architecture
+### 3.5 Pinned Dependency Versions
+
+For reproducibility, the following versions are pinned for the foundation. Patch versions may be bumped to the latest stable release at implementation time; major/minor changes require explicit approval.
+
+#### Backend
+
+| Dependency / Tool | Pinned Version | Where to Pin |
+|---|---|---|
+| Java | `21` LTS | `build.gradle.kts` toolchain / CI matrix |
+| Gradle | `8.10.2` | `gradle/wrapper/gradle-wrapper.properties` |
+| Spring Boot | `4.1.1` | `build.gradle.kts` plugin |
+| PostgreSQL (Docker image) | `16.4` | `infrastructure/docker/docker-compose.yml` |
+| PostgreSQL JDBC driver | Spring Boot BOM managed | `build.gradle.kts` |
+| Flyway | Spring Boot BOM managed | `build.gradle.kts` |
+| Testcontainers | `1.20.3` | `build.gradle.kts` `testImplementation` |
+| ArchUnit | `1.3.0` | `build.gradle.kts` `testImplementation` |
+| JUnit / Mockito / AssertJ | Spring Boot BOM managed | `build.gradle.kts` |
+
+#### Frontend
+
+| Dependency / Tool | Pinned Version | Where to Pin |
+|---|---|---|
+| Node.js | `22.11.0` LTS | `.nvmrc`, `package.json` `engines.node` |
+| npm | `10.9.0` | `package.json` `engines.npm` |
+| Vite | `5.4.10` | `package.json` `devDependencies` |
+| React | `18.3.1` | `package.json` `dependencies` |
+| TypeScript | `5.6.3` | `package.json` `devDependencies` |
+| Vitest | `2.1.3` | `package.json` `devDependencies` |
+| React Testing Library | `16.0.1` | `package.json` `devDependencies` |
+
+> **Note:** Versions are compatible with the accepted stack as of 2026-09-15. Verify latest stable patches at implementation time.
+
+### 3.6 Local Development Architecture
 
 | Component | Default Port | Purpose |
 |---|---|---|
@@ -156,7 +189,7 @@ Each package will eventually contain its own `controller`, `service`, `repositor
 - Docker Compose is the **recommended** reproducible path (`infrastructure/docker/docker-compose.yml` providing PostgreSQL).
 - Developer-managed PostgreSQL is a **supported alternative**. `application-local.yml` should use safe defaults that work for both paths (`jdbc:postgresql://localhost:5432/flashsale`).
 
-### 3.6 Dependencies for Foundation
+### 3.7 Dependencies for Foundation
 
 Backend:
 
@@ -354,7 +387,8 @@ The following earlier decisions remain accepted:
 | # | Decision Area | Decision | Status |
 |---|---------------|----------|--------|
 | 9 | Backend build tool | Gradle Kotlin DSL | **ACCEPTED** |
-| 10 | Frontend stack | Vite + React + TypeScript | **ACCEPTED** |
+| 10 | Spring Boot version | **4.1.1** (latest stable 4.x at implementation time) | **ACCEPTED** |
+| 11 | Frontend stack | Vite + React + TypeScript | **ACCEPTED** |
 | 11 | Frontend package manager | npm | **ACCEPTED** |
 | 12 | Database migrations | Flyway | **ACCEPTED** |
 | 13 | Module boundaries | Package-by-service | **ACCEPTED** |

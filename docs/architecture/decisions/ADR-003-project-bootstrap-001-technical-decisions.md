@@ -16,7 +16,8 @@ For the Phase 0 foundation, the human developer has accepted the following tool 
 | # | Decision Area | Decision | Status |
 |---|---------------|----------|--------|
 | 1 | Backend build tool | Gradle with Kotlin DSL | **ACCEPTED** |
-| 2 | Backend module strategy | Single Spring Boot application (`services/monolith`) with **package-by-service** boundaries aligned to future service names | **ACCEPTED** |
+| 2 | Spring Boot version | **4.1.1** (latest stable 4.x at implementation time) | **ACCEPTED** |
+| 3 | Backend module strategy | Single Spring Boot application (`services/monolith`) with **package-by-service** boundaries aligned to future service names | **ACCEPTED** |
 | 3 | Frontend build tool | Vite with React and TypeScript | **ACCEPTED** |
 | 4 | Frontend package manager | npm | **ACCEPTED** |
 | 5 | Database migrations | Flyway | **ACCEPTED** |
@@ -39,7 +40,41 @@ These choices are **accepted by the human developer** and are recorded here for 
 
 ---
 
-## 2. Context
+## 2. Pinned Dependency Versions
+
+For reproducibility, the following versions must be pinned in the foundation build files. Patch versions may be bumped to the latest stable release at implementation time, but major/minor versions require explicit approval.
+
+### Backend
+
+| Dependency / Tool | Pinned Version | Where to Pin |
+|---|---|---|
+| Java | `21` LTS | `build.gradle.kts` toolchain / CI matrix |
+| Gradle | `8.10.2` | `gradle/wrapper/gradle-wrapper.properties` |
+| Spring Boot | `4.1.1` | `build.gradle.kts` plugin |
+| PostgreSQL (Docker image) | `16.4` | `infrastructure/docker/docker-compose.yml` |
+| PostgreSQL JDBC driver | Spring Boot BOM managed | `build.gradle.kts` |
+| Flyway | Spring Boot BOM managed | `build.gradle.kts` |
+| Testcontainers | `1.20.3` | `build.gradle.kts` `testImplementation` |
+| ArchUnit | `1.3.0` | `build.gradle.kts` `testImplementation` |
+| JUnit / Mockito / AssertJ | Spring Boot BOM managed | `build.gradle.kts` |
+
+### Frontend
+
+| Dependency / Tool | Pinned Version | Where to Pin |
+|---|---|---|
+| Node.js | `22.11.0` LTS | `.nvmrc`, `package.json` `engines.node` |
+| npm | `10.9.0` | `package.json` `engines.npm` |
+| Vite | `5.4.10` | `package.json` `devDependencies` |
+| React | `18.3.1` | `package.json` `dependencies` |
+| TypeScript | `5.6.3` | `package.json` `devDependencies` |
+| Vitest | `2.1.3` | `package.json` `devDependencies` |
+| React Testing Library | `16.0.1` | `package.json` `devDependencies` |
+
+> **Note:** These versions are compatible with the accepted stack as of 2026-09-15. Verify the latest stable patch releases at implementation time.
+
+---
+
+## 3. Context
 
 - The project is in Phase 0 — Foundation, moving into Phase 1 — Modular Monolith.
 - SPEC.md §37 describes Phase 1 as `React → Spring Boot → PostgreSQL`.
@@ -49,7 +84,7 @@ These choices are **accepted by the human developer** and are recorded here for 
 
 ---
 
-## 3. Problem
+## 4. Problem
 
 How should the repository be structured and built so that:
 
@@ -60,7 +95,7 @@ How should the repository be structured and built so that:
 
 ---
 
-## 4. Options Considered
+## 5. Options Considered
 
 ### Backend Build Tool
 
@@ -125,7 +160,7 @@ How should the repository be structured and built so that:
 
 ---
 
-## 5. Decision Rationale
+## 6. Decision Rationale
 
 ### Why Gradle (Kotlin DSL)
 
@@ -188,11 +223,11 @@ How should the repository be structured and built so that:
 
 ---
 
-## 6. Tech Lead Challenges and Resolutions
+## 7. Tech Lead Challenges and Resolutions
 
 The Tech Lead (`keui3u6`) challenged several of the human's original proposals. The human developer has resolved each challenge as follows.
 
-### 6.1 Flyway Sequential Naming (`V1__...`) — Severity: High — **RESOLVED**
+### 7.1 Flyway Sequential Naming (`V1__...`) — Severity: High — **RESOLVED**
 
 **Original challenge:** Sequential numbering causes merge collisions in multi-developer workflows.
 
@@ -200,7 +235,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 **Tech Lead assessment:** Accepted. This eliminates branch-merge migration conflicts. Team must still ensure migration descriptions are meaningful and that no two developers intentionally create migrations with the same timestamp.
 
-### 6.2 ArchUnit from Day One — Severity: Medium — **RESOLVED**
+### 7.2 ArchUnit from Day One — Severity: Medium — **RESOLVED**
 
 **Original challenge:** Strict ArchUnit rules may slow experimentation and lead to tests being disabled.
 
@@ -208,7 +243,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 **Tech Lead assessment:** Accepted. The initial rule set should be minimal (e.g., prohibit cross-package repository access only). Rules must be tightened deliberately in Phase 2, not allowed to rot.
 
-### 6.3 Docker Compose for Local PostgreSQL — Severity: Medium — **RESOLVED**
+### 7.3 Docker Compose for Local PostgreSQL — Severity: Medium — **RESOLVED**
 
 **Original challenge:** Docker Compose as the only path can block contributors.
 
@@ -216,7 +251,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 **Tech Lead assessment:** Accepted. Documentation must describe both paths clearly and `application-local.yml` should use defaults that work for both (`localhost:5432/flashsale`).
 
-### 6.4 HikariCP Spring Boot Defaults — Severity: Medium — **RESOLVED WITH CAVEATS**
+### 7.4 HikariCP Spring Boot Defaults — Severity: Medium — **RESOLVED WITH CAVEATS**
 
 **Original challenge:** Relying on defaults is under-engineering for a performance-oriented project; explicit settings document intent.
 
@@ -224,7 +259,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 **Tech Lead assessment:** Accepted, with caveats. The team must remember that default pool size (10) and timeout (30s) are in effect. When Phase 4 (High Traffic) begins, the first benchmark should capture pool behavior as a baseline. The human's decision is consistent with SPEC.md §2.2 and AGENTS.md §9, but the default values must not be forgotten.
 
-### 6.5 Request ID + MDC in Foundation — Severity: Low — **RESOLVED**
+### 7.5 Request ID + MDC in Foundation — Severity: Low — **RESOLVED**
 
 **Original challenge:** Full request-id/MDC/structured logging is scope creep for Phase 0.
 
@@ -232,7 +267,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 **Tech Lead assessment:** Accepted. The filter should be trivial (~10 lines) and the Logback pattern should include the request id. No frontend interceptor, JSON logging, or trace propagation beyond MDC is added.
 
-### 6.6 Lombok — Severity: Low — **RESOLVED**
+### 7.6 Lombok — Severity: Low — **RESOLVED**
 
 **Original observation:** Lombok was not mentioned in the original decisions.
 
@@ -240,7 +275,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 **Tech Lead assessment:** Accepted. This keeps the build simple and avoids an annotation processor in Phase 0.
 
-### 6.7 Frontend API Wrapper — Severity: Low — **RESOLVED**
+### 7.7 Frontend API Wrapper — Severity: Low — **RESOLVED**
 
 **Original observation:** No decision on a minimal API client wrapper.
 
@@ -248,7 +283,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 **Tech Lead assessment:** Accepted. `src/api/` may be created as a placeholder directory, but no wrapper code is implemented in the foundation.
 
-### 6.8 Environment Configuration — Severity: Medium — **RESOLVED**
+### 7.8 Environment Configuration — Severity: Medium — **RESOLVED**
 
 **Original observation:** No decision on how developers supply local environment variables.
 
@@ -258,7 +293,7 @@ The Tech Lead (`keui3u6`) challenged several of the human's original proposals. 
 
 ---
 
-## 7. Final Tech Lead Concerns and Caveats
+## 8. Final Tech Lead Concerns and Caveats
 
 Although the human's decisions are accepted, the Tech Lead records the following concerns for future reference:
 
@@ -278,7 +313,7 @@ Although the human's decisions are accepted, the Tech Lead records the following
 
 ---
 
-## 8. Consequences
+## 9. Consequences
 
 ### Positive
 
@@ -308,7 +343,7 @@ Although the human's decisions are accepted, the Tech Lead records the following
 
 ---
 
-## 9. Related Decisions
+## 10. Related Decisions
 
 - Backend will run on port `8080`; frontend dev server on port `5173`; PostgreSQL on port `5432`.
 - Database credentials are externalized via environment variables and documented through `.env.example`.
@@ -318,7 +353,7 @@ Although the human's decisions are accepted, the Tech Lead records the following
 
 ---
 
-## 10. Compliance
+## 11. Compliance
 
 This decision aligns with:
 
@@ -335,7 +370,7 @@ This decision aligns with:
 
 ---
 
-## 11. Acceptance Record
+## 12. Acceptance Record
 
 The human developer explicitly accepted this ADR and the PROJECT-BOOTSTRAP-001 architecture at the Human Technical Decision Gate.
 
@@ -344,7 +379,7 @@ The human developer explicitly accepted this ADR and the PROJECT-BOOTSTRAP-001 a
 - **Final Tech Lead Consistency Review:** `docs/architecture/proposals/PROJECT-BOOTSTRAP-001-tech-lead-final-review.md`
 - **Human Decision Gate:** Cleared. All challenged decisions documented in §6 (Tech Lead Challenges and Resolutions) are accepted.
 
-## 12. Traceability
+## 13. Traceability
 
 - Architecture Proposal: `docs/architecture/proposals/PROJECT-BOOTSTRAP-001-architecture-proposal.md`
 - Tech Lead Challenge: `docs/architecture/proposals/PROJECT-BOOTSTRAP-001-tech-lead-challenge.md`
