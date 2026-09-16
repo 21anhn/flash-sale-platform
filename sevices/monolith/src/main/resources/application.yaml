@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: flashsale
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    
+  flyway:
+    locations:
+      - classpath:db/migration
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{requestId}] %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+
+app:
+  cors:
+    enabled: false
