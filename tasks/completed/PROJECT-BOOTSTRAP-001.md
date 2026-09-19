@@ -10,7 +10,7 @@
 **Relevant SPEC Section:** §36 (Repository Structure), §37 (Phase 0 Foundation / Phase 1 Modular Monolith)  
 **Dependencies:** None  
 **Priority:** High  
-**Status:** READY  
+**Status:** DONE  
 **Owner:** Human Developer
 
 ---
@@ -121,18 +121,39 @@ The human developer explicitly accepted ADR-003 and the PROJECT-BOOTSTRAP-001 ar
 
 ---
 
+## Completed Record
+
+- **Date:** 2026-09-19
+- **Commit SHA:** `4dc17a9` (amended, includes all BE+FE foundation work)
+- **Docs commit SHA:** `228da0b` (docs status updates)
+- **Branch:** `feature/PROJECT-BOOTSTRAP-001-foundation`
+- **Verification Summary:**
+  - Backend builds + `GET /actuator/health` → 200 `UP`
+  - Local PostgreSQL reachable (postgres:16.4, flyway_schema_history 1 row, schema_baseline table)
+  - FE→BE health smoke through proxy ✓ (`curl :5173/actuator/health` → `{"status":"UP"}`)
+  - Backend test harness passes (`architectureTest` green; Testcontainers `contextLoads` green)
+  - Frontend test harness passes (`vitest run` → 2 tests passed)
+  - ArchUnit lenient rules ✓
+  - RequestId in logs ✓ (`[mdc-confirm-007]` in TRACE)
+  - CORS gated by `app.cors.enabled=true` ✓
+  - `.env.example` exists, `.env` excluded ✓
+  - `application-test.yaml` has `on-profile: test` ✓
+  - No Kafka/Redis/K8s/auth/etc ✓
+
+---
+
 ## Definition of Done
 
 - [x] Human developer explicitly accepts the final ADR at the Technical Decision Gate.
-- [ ] Backend skeleton is implemented and builds successfully.
-- [ ] Frontend skeleton is implemented and builds successfully.
-- [ ] Local PostgreSQL connection is configured and reachable.
-- [ ] FE → BE health endpoint smoke test passes.
-- [ ] Backend and frontend test harnesses each have at least one passing test.
-- [ ] Security review findings (CORS, secrets, `.gitignore`, `.env` workflow) are addressed or accepted.
+- [x] Backend skeleton is implemented and builds successfully.
+- [x] Frontend skeleton is implemented and builds successfully.
+- [x] Local PostgreSQL connection is configured and reachable.
+- [x] FE → BE health endpoint smoke test passes.
+- [x] Backend and frontend test harnesses each have at least one passing test.
+- [x] Security review findings (CORS, secrets, `.gitignore`, `.env` workflow) are addressed or accepted.
 - [x] Architecture proposal and ADR are accepted or updated to reflect final decisions.
-- [ ] Product requirement, business analysis, test strategy, and security review are updated to IMPLEMENTED/VERIFIED status where applicable.
-- [ ] Task is moved to `tasks/completed/` after human confirmation.
+- [x] Product requirement, business analysis, test strategy, and security review are updated to IMPLEMENTED/VERIFIED status where applicable.
+- [x] Task is moved to `tasks/completed/` after human confirmation.
 
 ---
 

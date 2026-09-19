@@ -4,10 +4,22 @@
 **Role:** Product Owner  
 **Task:** PROJECT-BOOTSTRAP-001 — Project Foundation Bootstrap  
 **Artifact:** Product Requirement  
-**Status:** PROPOSED  
+**Status:** IMPLEMENTED  
 **Production Code Impact:** None (planning artifact only)
 
 ---
+
+## Implementation Status
+
+**Status:** IMPLEMENTED  
+**Verified at commit:** `4dc17a9` (amended)  
+**Verification evidence:**
+- Backend builds successfully; `GET /actuator/health` returns HTTP 200 `{"status":"UP"}`
+- Local PostgreSQL reachable (postgres:16.4, `flyway_schema_history` 1 row, `schema_baseline` table)
+- FE→BE health smoke through proxy: `curl :5173/actuator/health` → `{"status":"UP"}`
+- Backend test harness passes (`architectureTest` green; Testcontainers `contextLoads` green)
+- Frontend test harness passes (`vitest run` → 2 tests passed)
+- ArchUnit lenient rules ✓; RequestId in logs (`[mdc-confirm-007]` in TRACE); CORS gated by `app.cors.enabled=true`; `.env.example` exists, `.env` excluded
 
 ## 1. Goal and Business Value
 

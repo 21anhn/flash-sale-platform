@@ -4,10 +4,19 @@
 **Role:** Test Engineer  
 **Task:** PROJECT-BOOTSTRAP-001 — Project Foundation Bootstrap  
 **Artifact:** Test Strategy  
-**Status:** PROPOSED (awaiting final human acceptance of the ADR)  
+**Status:** VERIFIED  
 **Production Code Impact:** None (planning artifact only)
 
 ---
+
+## Implementation Status
+
+**Status:** VERIFIED  
+**Verified at commit:** `4dc17a9` (amended)  
+**Verification evidence:**
+- Backend harness passes (`architectureTest` green; Testcontainers `contextLoads` green)
+- Frontend harness passes (`vitest run` → 2 tests passed)
+- ArchUnit lenient rules ✓; RequestId in logs ✓
 
 ## 1. Goal
 
